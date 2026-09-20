@@ -8,6 +8,7 @@ project_root = Path.cwd()
 
 runtime_tree = [
     (str(project_root / "runtime"), "runtime"),
+    (str(project_root / "assets"), "assets"),
 ]
 
 hiddenimports = collect_submodules("ocrmypdf") + collect_submodules("customtkinter")
@@ -41,6 +42,7 @@ exe = EXE(
     strip=False,
     upx=False,
     console=False,
+    icon=str(project_root / "assets" / "icon.ico"),
     disable_windowed_traceback=False,
     target_arch=None,
     codesign_identity=None,

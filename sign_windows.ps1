@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "1.1.4",
+    [string]$Version = "1.1.6",
     [string]$PfxPath = "",
     [string]$PfxPassword = "",
     [switch]$InstallTestCert

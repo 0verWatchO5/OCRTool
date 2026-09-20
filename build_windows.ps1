@@ -1,5 +1,5 @@
 param(
-    [string]$Version = "1.1.4",
+    [string]$Version = "1.1.6",
     [switch]$SkipVenv,
     [string]$PfxPath = "",
     [string]$PfxPassword = ""
@@ -53,7 +53,10 @@ if (Test-Path "build") {
 }
 
 Write-Host "`n1. Building PyInstaller onedir bundle..."
-.\.venv\Scripts\pyinstaller.exe --clean --noconfirm OCRTool.spec
+& .\.venv\Scripts\python.exe -m PyInstaller --clean --noconfirm OCRTool.spec
+if ($LASTEXITCODE -ne 0) {
+    throw "PyInstaller build failed with exit code $LASTEXITCODE."
+}
 
 # STEP 1 SIGNING: Sign OCRTool.exe BEFORE packaging into Inno Setup installer
 if (Test-Path "sign_windows.ps1") {

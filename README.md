@@ -15,7 +15,6 @@ Built on top of [OCRmyPDF](https://github.com/ocrmypdf/OCRmyPDF), this tool bund
 - **Advanced Processing Options**:
   - **Force OCR**: Re-rasterize and OCR documents that already contain text.
   - **Auto-Deskew**: Automatically detect and straighten rotated/crooked scanned pages.
-  - **Clean Background**: Remove scan noise and artifacts before OCR.
 - **OCR Engine Controls**: Preset language selector (`English`, `German`, `French`, `Spanish`, `Italian`, `Chinese Simplified`, `Japanese`, or custom codes) and DPI presets (150, 300, 400, 600).
 - **Explorer & Desktop Integration**: Right-click context menu (**"OCR this PDF"**) and PDF file associations on Windows and Linux.
 - **Live Activity Console**: Timestamped console with progress tracking, ETA timer, and one-click "Copy Logs" functionality.

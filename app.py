@@ -11,6 +11,7 @@ import time
 import tkinter as tk
 from pathlib import Path
 from tkinter import filedialog, messagebox
+from PIL import Image, ImageTk
 
 import customtkinter as ctk
 
@@ -19,7 +20,7 @@ import ocrmypdf._plugin_manager
 import ocrmypdf.pluginspec
 from ocrmypdf.exceptions import MissingDependencyError
 
-APP_VERSION = "1.1.4"
+APP_VERSION = "1.1.6"
 
 
 def patch_subprocess_hide_console() -> None:
@@ -150,7 +151,6 @@ class OCRGuiApp(ctk.CTk):
         self.dpi_val = tk.StringVar(value="300")
         self.force_ocr = tk.BooleanVar(value=False)
         self.deskew = tk.BooleanVar(value=True)
-        self.clean = tk.BooleanVar(value=False)
 
         self.log_queue: queue.Queue[str] = queue.Queue()
         self.worker_thread: threading.Thread | None = None
@@ -162,9 +162,41 @@ class OCRGuiApp(ctk.CTk):
 
         # Build UI & runtime
         self._setup_theme()
+        self._set_window_icon()
         self._build_ui()
         self._prepare_runtime_paths()
         self._poll_logs()
+
+    def _find_asset(self, filename: str) -> Path | None:
+        candidates = [
+            Path(getattr(sys, "_MEIPASS", "")) / "assets" / filename,
+            Path(__file__).resolve().parent / "assets" / filename,
+            Path(getattr(sys, "_MEIPASS", "")) / filename,
+            Path(__file__).resolve().parent / filename,
+        ]
+        for cand in candidates:
+            if cand.exists():
+                return cand
+        return None
+
+    def _set_window_icon(self) -> None:
+        ico_file = self._find_asset("icon.ico")
+        png_file = self._find_asset("icon.png")
+
+        if ico_file and sys.platform == "win32":
+            try:
+                self.iconbitmap(str(ico_file))
+                return
+            except Exception:
+                pass
+
+        if png_file:
+            try:
+                img = Image.open(png_file)
+                self._photo_icon = ImageTk.PhotoImage(img)
+                self.iconphoto(False, self._photo_icon)
+            except Exception:
+                pass
 
     def _setup_theme(self) -> None:
         ctk.set_appearance_mode("Dark")
@@ -182,6 +214,17 @@ class OCRGuiApp(ctk.CTk):
         # Brand Title & Version
         brand_frame = ctk.CTkFrame(header_frame, fg_color="transparent")
         brand_frame.grid(row=0, column=0, padx=16, pady=12, sticky="w")
+
+        # Brand Icon
+        icon_path = self._find_asset("icon.png")
+        if icon_path:
+            try:
+                pil_icon = Image.open(icon_path)
+                self.brand_img = ctk.CTkImage(light_image=pil_icon, dark_image=pil_icon, size=(30, 30))
+                icon_lbl = ctk.CTkLabel(brand_frame, text="", image=self.brand_img)
+                icon_lbl.pack(side="left", padx=(0, 10))
+            except Exception:
+                pass
 
         title_lbl = ctk.CTkLabel(
             brand_frame,
@@ -440,15 +483,7 @@ class OCRGuiApp(ctk.CTk):
             variable=self.deskew,
             font=ctk.CTkFont(size=12),
         )
-        self.sw_deskew.pack(anchor="w", padx=12, pady=6)
-
-        self.sw_clean = ctk.CTkSwitch(
-            opts_box,
-            text="Clean Background (Remove scan noise before OCR)",
-            variable=self.clean,
-            font=ctk.CTkFont(size=12),
-        )
-        self.sw_clean.pack(anchor="w", padx=12, pady=(6, 10))
+        self.sw_deskew.pack(anchor="w", padx=12, pady=(6, 10))
 
         # 4. Action & Progress Area
         action_box = ctk.CTkFrame(right_col, fg_color="transparent")
@@ -917,7 +952,6 @@ class OCRGuiApp(ctk.CTk):
                 int(dpi_str),
                 self.force_ocr.get(),
                 self.deskew.get(),
-                self.clean.get(),
             ),
             daemon=True,
         )
@@ -932,7 +966,6 @@ class OCRGuiApp(ctk.CTk):
         dpi: int,
         force_ocr: bool,
         deskew: bool,
-        clean: bool,
     ) -> None:
         total_files = len(files)
         batch_start = time.time()
@@ -964,7 +997,6 @@ class OCRGuiApp(ctk.CTk):
                     output_type="pdf",
                     force_ocr=force_ocr,
                     deskew=deskew,
-                    clean=clean,
                     progress_bar=False,
                 )
             except MissingDependencyError as exc:

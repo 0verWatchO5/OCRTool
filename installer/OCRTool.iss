@@ -1,6 +1,6 @@
 #define AppName "OCR PDF Layer Tool"
 #ifndef AppVersion
-  #define AppVersion "1.1.4"
+  #define AppVersion "1.1.6"
 #endif
 #define AppPublisher "OCRTool"
 #define AppExeName "OCRTool.exe"
@@ -18,9 +18,10 @@ OutputBaseFilename=OCRTool-Setup-{#AppVersion}
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=..\assets\icon.ico
 ArchitecturesInstallIn64BitMode=x64
 PrivilegesRequired=admin
-UninstallDisplayIcon={app}\{#AppExeName}
+UninstallDisplayIcon={app}\{#AppExeName},0
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
