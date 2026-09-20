@@ -1,0 +1,82 @@
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Build & packaging artifacts
+build/
+dist/
+*.egg-info/
+*.whl
+*.tar.gz
+*.egg
+sdist/
+installer/output/
+*.exe
+*.msi
+
+# Arch Linux packaging artifacts
+arch/pkg/
+arch/src/
+*.pkg.tar.zst
+*.pkg.tar.xz
+*.pkg.tar.gz
+
+# Downloaded / portable runtime binaries (external dependencies)
+runtime/ghostscript/
+runtime/tesseract/
+!runtime/README.md
+
+# Certificates, private keys & secrets
+*.cer
+*.crt
+*.pfx
+*.p12
+*.pem
+*.key
+*.secret
+.env
+.env.*
+!*.env.example
+
+# Local test documents & sample outputs (prevents committing personal/confidential PDFs)
+*.pdf
+!samples/*.pdf
+test_output/
+tests/output/
+
+# Test coverage & tooling
+.coverage
+htmlcov/
+.tox/
+.nox/
+
+# Logs & temporary files
+*.log
+*.tmp
+*.bak
+*.swp
+*~
+
+# Operating System & IDE artifacts
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+.directory
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.project
+.pydevproject

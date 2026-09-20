@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=OCR PDF Layer Tool
+GenericName=PDF OCR Tool
+Comment=Add a searchable OCR text layer to PDF files
+Exec=ocrtool %F
+Icon=ocrtool
+Terminal=false
+Type=Application
+Categories=Office;Utility;Publishing;
+MimeType=application/pdf;
+Keywords=pdf;ocr;tesseract;searchable;scan;
+StartupNotify=true

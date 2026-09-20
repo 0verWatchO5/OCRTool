@@ -1,0 +1,22 @@
+pkgbase = ocrtool
+	pkgdesc = Desktop GUI for adding a searchable OCR text layer to PDF files
+	pkgver = 1.1.4
+	pkgrel = 1
+	url = https://github.com/your-username/OCRTool
+	arch = any
+	license = MPL-2.0
+	depends = python
+	depends = tk
+	depends = ocrmypdf
+	depends = tesseract
+	depends = ghostscript
+	optdepends = tesseract-data-eng: English OCR language data
+	optdepends = tesseract-data: Additional language data packs (deu, fra, spa, etc.)
+	source = ocrtool.desktop
+	source = ocrtool.sh
+	source = ocrtool.svg
+	sha256sums = SKIP
+	sha256sums = SKIP
+	sha256sums = SKIP
+
+pkgname = ocrtool

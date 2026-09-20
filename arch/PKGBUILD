@@ -1,0 +1,50 @@
+# Maintainer: OCRTool Developers
+pkgname=ocrtool
+pkgver=1.1.4
+pkgrel=1
+pkgdesc="Desktop GUI for adding a searchable OCR text layer to PDF files"
+arch=('any')
+url="https://github.com/your-username/OCRTool"
+license=('MPL-2.0')
+depends=(
+    'python'
+    'tk'
+    'ocrmypdf'
+    'tesseract'
+    'ghostscript'
+)
+optdepends=(
+    'tesseract-data-eng: English OCR language data'
+    'tesseract-data: Additional language data packs (deu, fra, spa, etc.)'
+)
+source=(
+    "ocrtool.desktop"
+    "ocrtool.sh"
+    "ocrtool.svg"
+)
+sha256sums=(
+    'SKIP'
+    'SKIP'
+    'SKIP'
+)
+
+package() {
+    # Install executable launcher
+    install -Dm755 "${srcdir}/ocrtool.sh" "${pkgdir}/usr/bin/ocrtool"
+
+    # Install Python application script
+    if [ -f "${startdir}/../app.py" ]; then
+        install -Dm644 "${startdir}/../app.py" "${pkgdir}/usr/share/ocrtool/app.py"
+    elif [ -f "${srcdir}/app.py" ]; then
+        install -Dm644 "${srcdir}/app.py" "${pkgdir}/usr/share/ocrtool/app.py"
+    else
+        echo "Error: app.py not found" >&2
+        return 1
+    fi
+
+    # Install desktop entry
+    install -Dm644 "${srcdir}/ocrtool.desktop" "${pkgdir}/usr/share/applications/ocrtool.desktop"
+
+    # Install application icon
+    install -Dm644 "${srcdir}/ocrtool.svg" "${pkgdir}/usr/share/icons/hicolor/scalable/apps/ocrtool.svg"
+}
