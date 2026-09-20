@@ -8,12 +8,17 @@ Built on top of [OCRmyPDF](https://github.com/ocrmypdf/OCRmyPDF), this tool bund
 
 ## Features
 
+- **Modern Professional GUI**: Sleek CustomTkinter interface with native Dark, Light, and System theme switching.
+- **Interactive Document Queue**: Scrollable file list displaying file names, formatted file sizes, and individual remove buttons.
+- **Engine Health Indicator**: Real-time status chip showing detection of Tesseract OCR and Ghostscript dependencies.
 - **Batch Processing**: Select one or multiple PDF documents simultaneously.
-- **Custom Output Options**: Designate destination directories and automatically append `_ocr` suffixes.
-- **OCR Engine Controls**: Configurable OCR language (e.g., `eng`, `deu`, `fra`) and DPI rendering settings.
-- **Force OCR Mode**: Re-OCR documents that already contain raster or imperfect text layers.
-- **Windows Explorer Integration**: Optional right-click context menu (**"OCR this PDF"**) and PDF file associations.
-- **Real-Time Logs**: Live console output and progress reporting directly within the GUI.
+- **Advanced Processing Options**:
+  - **Force OCR**: Re-rasterize and OCR documents that already contain text.
+  - **Auto-Deskew**: Automatically detect and straighten rotated/crooked scanned pages.
+  - **Clean Background**: Remove scan noise and artifacts before OCR.
+- **OCR Engine Controls**: Preset language selector (`English`, `German`, `French`, `Spanish`, `Italian`, `Chinese Simplified`, `Japanese`, or custom codes) and DPI presets (150, 300, 400, 600).
+- **Explorer & Desktop Integration**: Right-click context menu (**"OCR this PDF"**) and PDF file associations on Windows and Linux.
+- **Live Activity Console**: Timestamped console with progress tracking, ETA timer, and one-click "Copy Logs" functionality.
 
 ---
 

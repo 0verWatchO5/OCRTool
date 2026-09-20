@@ -10,8 +10,8 @@ runtime_tree = [
     (str(project_root / "runtime"), "runtime"),
 ]
 
-hiddenimports = collect_submodules("ocrmypdf")
-datas = runtime_tree + collect_data_files("ocrmypdf")
+hiddenimports = collect_submodules("ocrmypdf") + collect_submodules("customtkinter")
+datas = runtime_tree + collect_data_files("ocrmypdf") + collect_data_files("customtkinter")
 
 a = Analysis(
     ["app.py"],

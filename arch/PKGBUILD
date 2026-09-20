@@ -2,20 +2,22 @@
 pkgname=ocrtool
 pkgver=1.1.4
 pkgrel=1
-pkgdesc="Desktop GUI for adding a searchable OCR text layer to PDF files"
+pkgdesc="Modern desktop GUI for adding a searchable OCR text layer to PDF files"
 arch=('any')
-url="https://github.com/your-username/OCRTool"
+url="https://github.com/0verWatchO5/OCRTool"
 license=('MPL-2.0')
 depends=(
     'python'
     'tk'
-    'ocrmypdf'
     'tesseract'
     'ghostscript'
+    'ocrmypdf'
+    'python-customtkinter'
 )
 optdepends=(
     'tesseract-data-eng: English OCR language data'
     'tesseract-data: Additional language data packs (deu, fra, spa, etc.)'
+    'python-darkdetect: System theme detection for customtkinter'
 )
 source=(
     "ocrtool.desktop"

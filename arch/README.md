@@ -1,63 +1,71 @@
-# Arch Linux Packaging for OCR PDF Layer Tool
+# Arch Linux Packaging & Installation for OCR PDF Layer Tool
 
-This directory contains the packaging files to build and install **OCR PDF Layer Tool** (`ocrtool`) natively on Arch Linux and Arch-based distributions (Manjaro, EndeavourOS, Garuda, etc.).
-
----
-
-## Files
-
-- **`PKGBUILD`**: The standard Arch build definition file for `makepkg`.
-- **`ocrtool.desktop`**: Freedesktop application entry for desktop menus and file managers (`application/pdf` handler).
-- **`ocrtool.sh`**: Launch wrapper installed to `/usr/bin/ocrtool`.
-- **`ocrtool.svg`**: Application icon installed to `/usr/share/icons/hicolor/scalable/apps/`.
+This directory contains the packaging files to build and install **OCR PDF Layer Tool** (`ocrtool`) on Arch Linux and Arch-based distributions (Manjaro, EndeavourOS, Garuda, etc.).
 
 ---
 
-## Prerequisites (Arch Linux)
+## Why `pacman -S ocrmypdf` Fails
+In Arch Linux:
+- `python`, `tk`, `tesseract`, and `ghostscript` are in the **official Arch repositories**.
+- **`ocrmypdf`** and **`python-customtkinter`** are in the **AUR (Arch User Repository)**.
 
-Install the required base build tools and upstream dependencies from official Arch repositories:
+Standard `pacman` cannot search or install AUR packages directly. To install them, use one of the methods below.
+
+---
+
+## Method 1: Automated Script (Recommended)
+
+Run the included installer script, which automatically detects your AUR helper (`yay` or `paru`) or falls back to pip:
 
 ```bash
-sudo pacman -S --needed base-devel python tk ocrmypdf tesseract ghostscript tesseract-data-eng
+cd arch
+chmod +x install_arch.sh
+./install_arch.sh
 ```
 
-> **Note**: `tk` provides the Python `tkinter` GUI runtime, and `tesseract-data-eng` provides default English OCR training data. For other languages, install `tesseract-data-<lang>` (e.g. `tesseract-data-deu`, `tesseract-data-fra`).
-
 ---
 
-## Building and Installing Locally
+## Method 2: Using an AUR Helper (`yay` or `paru`)
 
-From the root of this repository:
+If you use `yay` or `paru`:
 
 ```bash
+# 1. Install dependencies (handles both official and AUR packages)
+yay -S --needed python tk tesseract ghostscript tesseract-data-eng ocrmypdf python-customtkinter
+
+# 2. Build and install ocrtool
 cd arch
 makepkg -si
 ```
 
-This will:
-1. Validate package dependencies.
-2. Package the application, desktop entry, launcher, and icon.
-3. Install the resulting `.pkg.tar.zst` package via `pacman`.
+---
+
+## Method 3: Without an AUR Helper (Manual pacman + pip)
+
+If you prefer using vanilla `pacman`:
+
+```bash
+# 1. Install official system packages
+sudo pacman -S --needed base-devel python tk tesseract ghostscript tesseract-data-eng python-pip
+
+# 2. Install ocrmypdf and customtkinter via pip
+sudo python -m pip install --break-system-packages ocrmypdf customtkinter darkdetect
+
+# 3. Build and install ocrtool (bypassing AUR dependency check)
+cd arch
+makepkg -si --nodeps
+```
 
 ---
 
 ## Launching
 
-Once installed, you can launch OCRTool:
+Once installed:
 - **Application Menu**: Search for **OCR PDF Layer Tool**.
-- **File Manager**: Right-click any `.pdf` file and choose **Open With -> OCR PDF Layer Tool**.
-- **Terminal**: Run `ocrtool` or pass one or more files directly:
+- **File Manager**: Right-click any PDF and select **Open With -> OCR PDF Layer Tool**.
+- **Terminal**:
   ```bash
-  ocrtool document.pdf scan2.pdf
+  ocrtool
+  # or pass PDFs directly:
+  ocrtool scan.pdf report.pdf
   ```
-
----
-
-## Generating `.SRCINFO` for AUR
-
-If maintaining an AUR package:
-
-```bash
-cd arch
-makepkg --printsrcinfo > .SRCINFO
-```

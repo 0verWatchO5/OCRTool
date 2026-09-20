@@ -1,2 +1,4 @@
 ocrmypdf>=16.0.0
 pyinstaller>=6.10.0
+customtkinter>=5.2.0
+darkdetect>=0.8.0
