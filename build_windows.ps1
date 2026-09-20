@@ -84,6 +84,7 @@ Write-Host "`n3. Building Inno Setup installer package with pre-signed OCRTool.e
 
 # STEP 2 SIGNING: Sign the resulting setup installer package
 if (Test-Path "sign_windows.ps1") {
+    Start-Sleep -Seconds 3
     Write-Host "`n4. Digitally signing installer setup executable (installer\output\OCRTool-Setup-$Version.exe)..."
     if ($PfxPath) {
         powershell -File "sign_windows.ps1" -Version "$Version" -PfxPath "$PfxPath" -PfxPassword "$PfxPassword"

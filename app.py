@@ -117,13 +117,21 @@ def patch_ocrmypdf_plugin_manager() -> None:
             except Exception:
                 pass
 
-    OcrmypdfPluginManager._setup_plugins = _setup_plugins
-    OcrmypdfPluginManager._is_bundled_patch_applied = True
+def set_windows_app_user_model_id() -> None:
+    """Set explicit AppUserModelID on Windows so the taskbar icon displays the application icon."""
+    if sys.platform == "win32":
+        try:
+            import ctypes
+            myappid = f"0verWatchO5.OCRTool.PDFLayer.{APP_VERSION}"
+            ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+        except Exception:
+            pass
 
 
 # Apply patches immediately on startup
 patch_subprocess_hide_console()
 patch_ocrmypdf_plugin_manager()
+set_windows_app_user_model_id()
 
 
 def format_file_size(num_bytes: int) -> str:
@@ -186,7 +194,8 @@ class OCRGuiApp(ctk.CTk):
         if ico_file and sys.platform == "win32":
             try:
                 self.iconbitmap(str(ico_file))
-                return
+                # Re-apply after 200ms to override any CustomTkinter default icon initialization
+                self.after(200, lambda: self.iconbitmap(str(ico_file)))
             except Exception:
                 pass
 
@@ -194,7 +203,7 @@ class OCRGuiApp(ctk.CTk):
             try:
                 img = Image.open(png_file)
                 self._photo_icon = ImageTk.PhotoImage(img)
-                self.iconphoto(False, self._photo_icon)
+                self.iconphoto(True, self._photo_icon)
             except Exception:
                 pass
 
