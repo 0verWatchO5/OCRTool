@@ -122,7 +122,7 @@ def set_windows_app_user_model_id() -> None:
     if sys.platform == "win32":
         try:
             import ctypes
-            myappid = f"0verWatchO5.OCRTool.PDFLayer.{APP_VERSION}"
+            myappid = "0verWatchO5.OCRTool.PDFLayer"
             ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
         except Exception:
             pass
@@ -144,6 +144,8 @@ def format_file_size(num_bytes: int) -> str:
 
 
 class OCRGuiApp(ctk.CTk):
+    """Modern Desktop GUI for OCR PDF Layer Tool."""
+
     def __init__(self) -> None:
         super().__init__()
 
@@ -187,25 +189,80 @@ class OCRGuiApp(ctk.CTk):
                 return cand
         return None
 
+    def _apply_windows_native_icons(self, ico_path: Path) -> None:
+        """Apply high-resolution native icons directly via Win32 API to all window handles."""
+        if sys.platform != "win32" or not ico_path.exists():
+            return
+        try:
+            import ctypes
+            user32 = ctypes.windll.user32
+            WM_SETICON = 0x0080
+            ICON_SMALL = 0
+            ICON_BIG = 1
+            GCLP_HICON = -14
+            GCLP_HICONSM = -34
+            IMAGE_ICON = 1
+            LR_LOADFROMFILE = 0x00000010
+
+            self.update_idletasks()
+
+            h16 = user32.LoadImageW(None, str(ico_path), IMAGE_ICON, 16, 16, LR_LOADFROMFILE)
+            h32 = user32.LoadImageW(None, str(ico_path), IMAGE_ICON, 32, 32, LR_LOADFROMFILE)
+
+            hwnds = set()
+            try:
+                h = self.winfo_id()
+                if h:
+                    hwnds.add(h)
+                p = user32.GetParent(h)
+                if p:
+                    hwnds.add(p)
+            except Exception:
+                pass
+            try:
+                frame_hwnd = int(self.wm_frame(), 16)
+                if frame_hwnd:
+                    hwnds.add(frame_hwnd)
+            except Exception:
+                pass
+
+            for hwnd in hwnds:
+                if h16:
+                    user32.SendMessageW(hwnd, WM_SETICON, ICON_SMALL, h16)
+                    try:
+                        user32.SetClassLongPtrW(hwnd, GCLP_HICONSM, h16)
+                    except Exception:
+                        pass
+                if h32:
+                    user32.SendMessageW(hwnd, WM_SETICON, ICON_BIG, h32)
+                    try:
+                        user32.SetClassLongPtrW(hwnd, GCLP_HICON, h32)
+                    except Exception:
+                        pass
+        except Exception:
+            pass
+
     def _set_window_icon(self) -> None:
         ico_file = self._find_asset("icon.ico")
         png_file = self._find_asset("icon.png")
 
-        if ico_file and sys.platform == "win32":
-            try:
-                self.iconbitmap(str(ico_file))
-                # Re-apply after 200ms to override any CustomTkinter default icon initialization
-                self.after(200, lambda: self.iconbitmap(str(ico_file)))
-            except Exception:
-                pass
-
-        if png_file:
-            try:
-                img = Image.open(png_file)
-                self._photo_icon = ImageTk.PhotoImage(img)
-                self.iconphoto(True, self._photo_icon)
-            except Exception:
-                pass
+        if sys.platform == "win32":
+            if ico_file:
+                try:
+                    self.iconbitmap(str(ico_file))
+                except Exception:
+                    pass
+                self._apply_windows_native_icons(ico_file)
+                # Re-apply after 250ms to ensure CustomTkinter's 200ms hook doesn't override
+                self.after(250, lambda: self._apply_windows_native_icons(ico_file))
+        else:
+            if png_file:
+                try:
+                    img = Image.open(png_file)
+                    self._photo_icon = ImageTk.PhotoImage(img)
+                    self.iconphoto(True, self._photo_icon)
+                except Exception:
+                    pass
 
     def _setup_theme(self) -> None:
         ctk.set_appearance_mode("Dark")

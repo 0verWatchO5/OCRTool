@@ -35,8 +35,8 @@ Name: "associatepdf"; Description: "Associate .pdf files with OCR PDF Layer Tool
 Source: "..\dist\OCRTool\*"; DestDir: "{app}"; Flags: recursesubdirs createallsubdirs ignoreversion
 
 [Icons]
-Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"
-Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon
+Name: "{group}\{#AppName}"; Filename: "{app}\{#AppExeName}"; AppUserModelID: "0verWatchO5.OCRTool.PDFLayer"
+Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExeName}"; Tasks: desktopicon; AppUserModelID: "0verWatchO5.OCRTool.PDFLayer"
 
 [Registry]
 Root: HKCR; Subkey: "SystemFileAssociations\.pdf\shell\OCRWithOCRTool"; ValueType: string; ValueName: ""; ValueData: "OCR this PDF"; Tasks: contextmenu; Flags: uninsdeletekey
